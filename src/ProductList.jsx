@@ -57,7 +57,6 @@ const plantsArray = catalog.categories.map((category) => ({
 
 function ProductList({ onHomeClick }) {
   const [showCart, setShowCart] = useState(false);
-  const [addedToCart, setAddedToCart] = useState({});
   const cart = useSelector((state) => state.cart.items);
   const dispatch = useDispatch();
   const calculateTotalQuantity = () => cart ? cart.reduce((total, item) => total + item.quantity, 0) : 0;
@@ -65,10 +64,6 @@ function ProductList({ onHomeClick }) {
   const isInCart = (id) => cart.some((item) => item.id === id);
   const handleAddToCart = (product) => {
     dispatch(addItem(product));
-    setAddedToCart((previousState) => ({
-      ...previousState,
-      [product.name]: true
-    }));
   };
 
   return (
@@ -96,7 +91,7 @@ function ProductList({ onHomeClick }) {
             {category.plants.map((plant) => <article className="product-card" key={plant.id}>
               <img className="product-image" src={plant.image} alt={plant.name} />
               <div className="product-card-content"><h3 className="product-title">{plant.name}</h3><p className="product-description">{plant.description}</p><p className="product-cost product-price">${plant.cost.toFixed(2)}</p>
-                <button className={`product-button ${isInCart(plant.id) && addedToCart[plant.name] ? 'added-to-cart' : ''}`} disabled={isInCart(plant.id) && addedToCart[plant.name]} onClick={() => handleAddToCart(plant)}>{isInCart(plant.id) && addedToCart[plant.name] ? 'Added to Cart' : 'Add to Cart'}</button>
+                <button className={`product-button ${isInCart(plant.id) ? 'added-to-cart' : ''}`} disabled={isInCart(plant.id)} onClick={() => handleAddToCart(plant)}>{isInCart(plant.id) ? 'Added to Cart' : 'Add to Cart'}</button>
               </div>
             </article>)}
           </div>
